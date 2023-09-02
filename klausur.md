@@ -45,6 +45,22 @@ Eine Datenstruktur ist eine Methode, Daten für den Zugriff und die Modifikation
 Eine aus endlich vielen Schritten bestehende,
 ausführbare Handlungsvorschrift zur eindeutigen Umwandlung von Eingabe- in Ausgabedaten
 
+## Abstrakter Datentyp ("was")
+
+näher an der Anwendung
+
+Biespiel:
+
+Stack mit Operationen `isEmpty, pop, push`
+
+## Datensrtuktur ("wie")
+
+näher an der Maschine
+
+Beispiel:
+
+Stack-Operationen als Array oder verkette Liste
+
 \pagebreak
 
 # Sortieralgorithmen
