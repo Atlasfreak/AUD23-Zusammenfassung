@@ -1,0 +1,7 @@
+{
+    "pandoc.pdfOptString": "-V geometry:a4paper -V geometry:margin=1cm -V geometry:nohead -s --template eisvogel --listings -N --filter pandoc-latex-environment",
+    "markdownlint.config": {
+        "MD025": false
+    },
+    "tableformatter.common.centerAlignedHeader": false,
+}
