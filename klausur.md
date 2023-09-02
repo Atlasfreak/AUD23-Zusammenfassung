@@ -192,21 +192,63 @@ Randomisirte Variante von Quicksort:
 Wählt als Pivot Element immer zufällig eines der Elemente und tauscht es an den Anfang der Liste, damit der gleiche Algorithmus verwendet werden kann.
 :::
 
+## Radix Sort
+
+```pseudo
+radixSort(A) // keys: d digits in range [0,D-1]
+// B[0][],…, B[D-1][] buckets (init: B[k].size=0)
+    FOR i=0 TO d-1 DO //0 least, d-1 most sign. digit
+        FOR j=0 TO n-1 DO
+            putBucket(A,B,i,j);
+        a=0;
+        FOR k=0 TO D-1 DO //rewrite to array
+            FOR b=0 TO B[k].size-1 DO
+                A[a]=B[k][b]; //read out bucket in order
+                a=a+1;
+            B[k].size=0; //clear bucket again
+    return A
+```
+
+```pseudo
+putBucket(A,B,i,j) // call-by-reference
+    z=A[j].digit[i]; // i-th digit of A[j]
+    b=B[z].size; // next free spot
+    B[z][b]=A[j];
+    B[z].size=B[z].size+1;
+```
+
+::: tip
+Gesamt Idee:
+
+Schlüssel sind d-stellige Werte in D-närem Zahlensystem
+
+Werte werden in "Buckets" aufgeteilt. "Buckets" erlauben einfügen und entnehmen (in eingefügter Reihenfolge) in konstanter Zeit. Daher als Queue zu realisieren
+
+- $i$-te Iteration ($i \in [0 \dots d-1]$):
+  1. Zahlen nach $i$-ter Ziffer sortieren in entsprechenden Bucket
+  2. Aufsteigend die Buckets durchgehen und an nächster Stelle in Array ablegen
+- funktioniert nur wenn mit niedrigswertigen Ziffer begonnen wird
+:::
+
 ## Laufzeiten
 
-+---------------------------------------+-----------------------------+-------------------------------------------+
-| Inserion Sort                         | Merge Sort                  | Quicksort                                 |
-+=======================================+=============================+===========================================+
-| Laufzeit $\Theta(n^2)$                | Beste asymptotische         | Worst-Case-Laufzeit $\Theta(n^2)$\        |
-|                                       | Laufzeit $\Theta(n\log(n))$ | randomisirt mit erwarteter                |
-|                                       |                             | Laufzeit $\Theta(n \cdot log(n))$         |
-+---------------------------------------+-----------------------------+-------------------------------------------+
-| einfache Implementierung              |                             | in Praxis meist schneller als Merge Sort, |
-|                                       |                             | da weniger Kopieroperationen              |
-+---------------------------------------+-----------------------------+-------------------------------------------+
-| für kleine $n \leq 50$ oft beste Wahl |                             | Implementierungen schalten für kleine $n$ |
-|                                       |                             | meist auf Insertion Sort                  |
-+---------------------------------------+-----------------------------+-------------------------------------------+
++---------------------------------------+-----------------------------+-------------------------------------------+--------------------------------------------------+
+| Inserion Sort                         | Merge Sort                  | Quicksort                                 | Radix Sort                                       |
++=======================================+=============================+===========================================+==================================================+
+| Laufzeit $\Theta(n^2)$                | Beste asymptotische         | Worst-Case-Laufzeit $\Theta(n^2)$\        | Zifferbereichgröße D als konstant ansehen:       |
+|                                       |                             |                                           | Laufzeit $O(d \cdot n)$\                         |
+|                                       | Laufzeit $\Theta(n\log(n))$ | randomisirt mit erwarteter                | Wenn auch $d$ als konstant angehesen:            |
+|                                       |                             |                                           | Laufzeit $O(n)$\                                 |
+|                                       |                             | Laufzeit $\Theta(n \cdot log(n))$         | **Aber:** eindeutige Schlüssel für $n$           |
+|                                       |                             |                                           | Elemente benötigen d = $\Theta(\log_D(n)$ Ziffen |
+|                                       |                             |                                           | $\Rightarrow$ Laufzeit $O(n \cdot \log(n))$      |
++---------------------------------------+-----------------------------+-------------------------------------------+--------------------------------------------------+
+| einfache Implementierung              |                             | in Praxis meist schneller als Merge Sort, |                                                  |
+|                                       |                             | da weniger Kopieroperationen              |                                                  |
++---------------------------------------+-----------------------------+-------------------------------------------+--------------------------------------------------+
+| für kleine $n \leq 50$ oft beste Wahl |                             | Implementierungen schalten für kleine $n$ |                                                  |
+|                                       |                             | meist auf Insertion Sort                  |                                                  |
++---------------------------------------+-----------------------------+-------------------------------------------+--------------------------------------------------+
 
 ::: note
 Untere Schranke für vergleichsbasierte Sortieralgorithmen:
