@@ -18,6 +18,14 @@ pandoc-latex-environment:
   importantblock: [important]
 ---
 
+<!--
+Render with
+"pandoc klausur.md -o klausur.pdf -V geometry:a4paper -V geometry:margin=1cm -V geometry:nohead -s --template eisvogel --listings -N --filter pandoc-latex-environment"
+
+pandoc-latex-environment needs to be installed and also TexLive or MikTex
+if not installed the latex package "awesomebox" needs to be installed
+-->
+
 # Basisbegriffe
 
 ## Bestimmt
