@@ -334,8 +334,6 @@ Wenn $=$, dann $\Theta$
 | $\Theta(2^n)$             | Expotentiell  | Travelling-Salesmen    |
 | $\Theta(n!)$              | Faktoriell    | Permutation            |
 
-\pagebreak
-
 # Rekursionsgleichungen/Laufzeitanalyse
 
 (am Beispiel Merge Sort)
