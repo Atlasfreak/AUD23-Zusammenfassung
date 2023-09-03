@@ -2,7 +2,7 @@
 title: Zusammenfassung AUD für Klausur
 author: Per Göttlicher
 date: 02.09.2023
-disable-header-and-footer: true
+disable-header-and-footer: false
 listings-no-page-break: true
 table-use-row-colors: true
 header-includes:
@@ -20,7 +20,7 @@ pandoc-latex-environment:
 
 <!--
 Render with
-"pandoc klausur.md -o klausur.pdf -V geometry:a4paper -V geometry:margin=1cm -V geometry:nohead -s --template eisvogel --listings -N --filter pandoc-latex-environment"
+"pandoc klausur.md -o klausur.pdf -V geometry:a4paper -V geometry:margin=1cm -V geometry:includeheadfoot=true -s --template eisvogel --listings -N --filter pandoc-latex-environment"
 
 pandoc-latex-environment needs to be installed and also TexLive or MikTex
 if not installed the latex package "awesomebox" needs to be installed
@@ -280,6 +280,8 @@ Untere Schranke für vergleichsbasierte Sortieralgorithmen:
 $\Omega(n \cdot \log(n)) \Rightarrow$ jeder vergleichsbasierter Algorithmus muss mindestens $n \cdot \log(n)$ Schritte machen.
 :::
 
+\pagebreak
+
 # Konzepte
 
 ## Divide & Conquer (& Combine)
@@ -479,6 +481,8 @@ Bei 1. & 3. unterscheidet sich der polynomielle Faktgor $n^\epsilon$
 
    Kein Fall anwendbar, da $a = 8; b = 2; \log_b(a)=3; f(n) = n^3 \cdot \log_4(n+16)$ für jedes $\epsilon > 0$ gilt $f(n) \neq O(n^{\log_b(a) - \epsilon})$, $f(n) \neq \Omega(n^{\log_b(a) + \epsilon})$ und $f(n) \neq \Theta(n^{\log_b(a)})$
 
+\pagebreak
+
 # Basic Data Structure
 
 ## Stacks
@@ -494,13 +498,11 @@ Bei 1. & 3. unterscheidet sich der polynomielle Faktgor $n^\epsilon$
 
 LIFO - last in, last out
 
-### Beispiele
+Beispiele:
 
 - Bitcoins nutzen Stacks um verschiedene Werte während dem Verifikationsprozess zu speichern
 
-### Implementierung
-
-#### Array
+### Implementierung: Array
 
 ```pseudo
 new(S)
@@ -544,9 +546,11 @@ Entweder in neues größeres Array umkopieren oder auf viele Arrays verteilen ($
 Problem ist durchschnittlich $\Omega(n)$ Kopierschritte pro `push`.
 
 Reduzierung durch verdoppelung des Arrays, wenn an Grenze und schrumpfen, wenn weniger als Viertel belegt.
+
+Siehe [variables Array](#implementierung-variables-array).
 :::
 
-#### variables Array
+### Implementierung: variables Array
 
 ```pseudo
 new(S)
