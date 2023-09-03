@@ -492,6 +492,8 @@ Bei 1. & 3. unterscheidet sich der polynomielle Faktgor $n^\epsilon$
 | `pop(S)`     | gibt oberstes Element vom Stack `S` zurück und löscht es vom Stack (Fehlermeldung wenn Stack leer) |
 | `push(S, k)` | schreibt `k` als neues oberstes Element auf Stack `S` (Fehlermeldung wenn Stack voll)              |
 
+LIFO - last in, last out
+
 ### Beispiele
 
 - Bitcoins nutzen Stacks um verschiedene Werte während dem Verifikationsprozess zu speichern
