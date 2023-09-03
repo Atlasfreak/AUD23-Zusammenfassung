@@ -939,3 +939,70 @@ Verschiedene Bäume können die gleiche Postorder haben.
 - Inorder indentifiziert Wert im rechten und linken Teilbaum
 - Analog für Postorder
 
+### Abstrakter Datentyp Baum
+
+| Befehl         | Beschreibung                                                        |
+| -------------- | ------------------------------------------------------------------- |
+| `new(T)`       | erzeugt neuen Baum namens `T`                                       |
+| `search(T, k)` | gibt Element `x` in Baum mit `T` mit `x.key==k` zurück (bzw. `nil`) |
+| `insert(T,x)`  | fügt Element `x` in Baum `T` hinzu                                  |
+| `delete(T,x)`  | löscht `x` aus Baum `T`                                             |
+
+oft weitere Baum-Operationen wie Wurzel, Höhe, Traversieren, ...
+
+### Suchen
+
+```pseudo
+search(x,k)
+    IF x==nil THEN
+        return nil;
+    IF x.key==k THEN
+        return x;
+    y=search(x.left,k);
+    IF y != nil THEN
+        return y;
+    return search(x.right,k);
+```
+
+::: note
+Laufzeit von `search`: $\Theta(n)$
+
+jeder Knoten wird maximal einmal besucht, im schlechtesten Fall aber auch jeder Knoten
+:::
+
+### Einfügen
+
+```pseudo
+insert(T,x) //x.parent==x.left==x.right==nil;
+    IF T.root != nil THEN
+        T.root.parent=x;
+        x.left=T.root;
+    T.root=x;
+```
+
+::: note
+Laufzeit von `search`: $\Theta(1)$
+
+**Achtung:** erzeugt linkslastigen Baum!
+:::
+
+### Löschen
+
+```pseudo
+delete(T,x) //assumes x in T
+    y=T.root;
+    WHILE y.right!=nil DO
+        y=y.right;
+    connect(T,y,y.left);
+    IF x != y THEN
+        y.left=x.left;
+        IF x.left != nil THEN
+            x.left.parent=y;
+        y.right=x.right;
+        IF x.right != nil THEN
+            x.right.parent=y;
+    connect(T,x,y);
+```
+
+Laufzeit: $\Theta(h)$ h = Höhe des Baumes
+
