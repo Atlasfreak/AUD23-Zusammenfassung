@@ -747,3 +747,13 @@ Zyklisches Array als Kreis vorstellen
 
 ![Visualisierung eines zyklischen Arrays](zyklisches%20Array.png){width=70%}
 :::
+
+### Queue als einfach verkettete Liste
+
+::: big
+$\underset{\underset{front}{\uparrow}}{5} \rightarrow 12 \rightarrow 17 \rightarrow \underset{\underset{rear}{\uparrow}}{47}$
+:::
+
+$front$ wandert beim auswerfen nach rechts
+
+$rear$ wandert beim einfügen nach rechts
