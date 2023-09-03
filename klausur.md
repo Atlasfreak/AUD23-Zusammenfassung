@@ -600,6 +600,7 @@ Jedes Element `x` besteht aus:
 
 ### Als Array
 
+|       |          |          |            |         |          |          |          |            |          |
 | ----- | -------- | -------- | ---------- | ------- | -------- | -------- | -------- | ---------- | -------- |
 | Werte | 12 (key) | 6 (prev) | nil (next) | - (key) | - (prev) | - (next) | 45 (key) | nil (prev) | 0 (next) |
 | Index | 0        | 1        | 2          | 3       | 4        | 5        | 6        | 7          | 8        |
