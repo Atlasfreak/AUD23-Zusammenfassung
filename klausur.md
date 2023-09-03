@@ -757,3 +757,62 @@ $\underset{\underset{front}{\uparrow}}{5} \rightarrow 12 \rightarrow 17 \rightar
 $front$ wandert beim auswerfen nach rechts
 
 $rear$ wandert beim einfügen nach rechts
+
+```pseudo
+new(Q)
+    Q.front=nil;
+    Q.rear=nil;
+```
+
+```pseudo
+isEmpty(Q)
+    IF Q.front==nil THEN
+        return true
+    ELSE
+        return false;
+```
+
+```pseudo
+dequeue(Q)
+    IF isEmpty(Q) THEN
+        error "underflow"
+    ELSE
+        x=Q.front;
+        Q.front=Q.front.next;
+        return x;
+```
+
+```pseudo
+enqueue(Q,x)
+    IF isEmpty(Q) THEN
+        Q.front=x;
+    ELSE
+        Q.rear.next=x;
+    x.next=nil;
+    Q.rear=x;
+```
+
+## Anzahl der Operation im Worst-Case
+
+Stack
+
+| Operation | Laufzeit    |
+| --------- | ----------- |
+| Push      | $\Theta(1)$ |
+| Pop       | $\Theta(1)$ |
+
+Queue
+
+| Opertaion | Laufzeit    |
+| --------- | ----------- |
+| Enqueue   | $\Theta(1)$ |
+| Dequeue   | $\Theta(1)$ |
+
+Verkettete Liste
+
+| Operation | Laufzeit                               |
+| --------- | -------------------------------------- |
+| Einfügen  | $\Theta(1)$                            |
+| Löschen   | $\Theta(1)$ für einen Wert $\Omega(n)$ |
+| Suchen    | $\Theta(n)$                            |
+
