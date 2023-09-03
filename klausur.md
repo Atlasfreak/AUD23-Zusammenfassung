@@ -9,6 +9,8 @@ header-includes:
 - |
   ```{=latex}
   \usepackage{awesomebox}
+
+  \newenvironment{bigtext}{\large}{\normalsize}
   ```
 pandoc-latex-environment:
   noteblock: [note]
@@ -16,6 +18,7 @@ pandoc-latex-environment:
   warningblock: [warning]
   cautionblock: [caution]
   importantblock: [important]
+  bigtext: [big]
 ---
 
 <!--
