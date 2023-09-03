@@ -816,3 +816,126 @@ Verkettete Liste
 | Löschen   | $\Theta(1)$ für einen Wert $\Omega(n)$ |
 | Suchen    | $\Theta(n)$                            |
 
+## Binäre Bäume
+
+### Als verkettete Listen
+
+Jeder Knoten enthält:
+
+- `key`: Wert
+- `child[]`: Array von Zeigern auf Kinder
+- `parent`: Zeiger auf den Elternknoten
+
+![Darstellung eines Baums als verkettete Liste](linkednlistTree.png){width=70%}
+
+::: note
+Baum Bedingung:
+
+Baum ist leer oder es gibt einen Knoten `r` ("Wurzel"), so dass jeder Knoten `v` von der WUrzel aus per eindeutiger Sequenz von `child`-Zeigern erreichbar ist:
+
+`v = r.chjild[i1].child[i2]. ... .child[im]`
+:::
+
+### Eigenschaften
+
+- Bäume sind azyklisch
+- Für nicht-leeren Baum gibt es genau $\#Knoten - 1$ viele Einträge $\neq nil$ über alle Listen `child[]`
+- Höhe des Baumes = maximale Tiefe eines Knoten
+
+::: tip
+Bäume werden üblicherweise als ungerichtete Graphen dargestellt
+
+![Baum als Graph](treeAsGraph.png){width=70%}
+:::
+
+::: tip
+Begrifflichkeiten bei Bäumen:
+
+![Begrifflichkeiten von Bäumen](treeTerms.png){width=70%}
+
+- Halbblätter haben genau ein Kinde
+- Höhe eines nicht-leeren Baumes = max {Höhe aller Teilbäume der Wurzel} + 1
+- Binärbäume: jeder Knoten hat maximal 2 Kinder (Ausgangsgrad $\leq 2$)
+- Höhe leerer Baum per Konvention -1
+:::
+
+### Inorder
+
+```pseudo
+inorder(x)
+    IF x != nil THEN
+        inorder(x.left);
+        print x.key;
+        inorder(x.right);
+```
+
+::: note
+Bei Zahlen diese einfach aufsteigend notieren, wenn Binärer Suchbaum.
+
+Beispiel für Begrifflichkeiten Baum: 23, 9, 17, 5, 23, 12
+:::
+
+::: warning
+Verschiedene Bäume können die gleiche Inorder haben.
+:::
+
+::: tip
+Laufzeit bei Binärbäumen der Inorder-Traversierung: $O(n)$
+:::
+
+### Preorder
+
+```pseudo
+preorder(x)
+    IF x != nil THEN
+        print x.key;
+        preorder(x.left);
+        preorder(x.right);
+```
+
+::: note
+Beispiel für Begrifflichkeiten Baum: 5, 9, 23, 17, 12, 23
+
+Einsatzmöglichkeiten:
+
+- Syntaxbaum von funktionalen Programmiersprachen
+- Für Kopieren von Bäumen:
+  1. Betrachtet zunächst Knoten und legt Kopie an
+  2. Geht dann rekursiv in Teilbäume und kopiert diese
+:::
+
+::: warning
+Verschiedene Bäume können die gleiche Preorder haben.
+:::
+
+### Postorder
+
+```pseudo
+postorder(x)
+    IF x != nil THEN
+        postorder(x.left);
+        postorder(x.right);
+        print x.key;
+```
+
+::: note
+Beispiel für Begrifflichkeiten Baum: 23, 17, 9, 23, 12, 5
+
+Einsatzmöglichkeiten:
+
+- Löschen von Knoten:
+  1. Geht zunächst rekursiv in Teilbäume und löscht diese
+  2. betrachtet Knoten erst danah und löscht den kompletten Knoten
+  - Zeiger auf rechten Teilbaum noch vorhanden, wenn linker bereits gelöscht
+:::
+
+::: warning
+Verschiedene Bäume können die gleiche Postorder haben.
+:::
+
+### Preoder + Inorder + eindeutige Werte $\Rightarrow$ Binärbaum
+
+- Preorder identifiziert Wurzel
+- Inorder indentifiziert Wert im rechten und linken Teilbaum
+- Analog für Postorder
+
