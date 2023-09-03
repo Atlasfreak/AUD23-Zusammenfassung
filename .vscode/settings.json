@@ -4,4 +4,13 @@
         "MD025": false
     },
     "tableformatter.common.centerAlignedHeader": false,
+    "spellright.language": [
+        "de",
+        "en"
+    ],
+    "spellright.documentTypes": [
+        "markdown",
+        "latex",
+        "plaintext"
+    ],
 }

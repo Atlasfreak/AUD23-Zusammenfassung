@@ -57,11 +57,11 @@ ausführbare Handlungsvorschrift zur eindeutigen Umwandlung von Eingabe- in Ausg
 
 näher an der Anwendung
 
-Biespiel:
+Beispiel:
 
 Stack mit Operationen `isEmpty, pop, push`
 
-## Datensrtuktur ("wie")
+## Datenstruktur ("wie")
 
 näher an der Maschine
 
@@ -117,7 +117,7 @@ unsortiert: [2,4,1,3]
 
 sortiert: [1,2,3,4]
 
-## Stonesort
+## Stone Sort
 
 ```pseudo
 stoneSort(A)
