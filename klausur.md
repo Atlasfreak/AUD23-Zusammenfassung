@@ -478,3 +478,195 @@ Bei 1. & 3. unterscheidet sich der polynomielle Faktgor $n^\epsilon$
 6. $T(n) = 8 \cdot T(n/2) + n^3 \cdot \log_4(n+16)$
 
    Kein Fall anwendbar, da $a = 8; b = 2; \log_b(a)=3; f(n) = n^3 \cdot \log_4(n+16)$ für jedes $\epsilon > 0$ gilt $f(n) \neq O(n^{\log_b(a) - \epsilon})$, $f(n) \neq \Omega(n^{\log_b(a) + \epsilon})$ und $f(n) \neq \Theta(n^{\log_b(a)})$
+
+# Basic Data Structure
+
+## Stacks
+
+### Abstrakter Datentyp
+
+| Befehl       | Beschreibung                                                                                       |
+| ------------ | -------------------------------------------------------------------------------------------------- |
+| `new(S)`     | erzeugt neuen (leeren) Stack namens `S`                                                            |
+| `isEmpty(s)` | gibt an ob der Stak `S` leer ist                                                                   |
+| `pop(s)`     | gibt oberstes Element vom Stack `S` zurück und löscht es vom Stack (Fehlermeldung wenn Stack leer) |
+| `push(S, k)` | schreibt `k` als neues oberstes Element auf Stack `S` (Fehlermeldung wenn Stack voll)              |
+
+### Beispiele
+
+- Bitcoins nutzen Stacks um verschiedene Werte während dem Verifikationsprozess zu speichern
+
+### Implementierung
+
+#### Array
+
+```pseudo
+new(S)
+    S.A[]=ALLOCATE(MAX);
+    S.top=-1;
+```
+
+```pseudo
+isEmpty(S)
+    IF S.top<0 THEN
+        return true
+    ELSE
+        return false;
+```
+
+```pseudo
+pop(S)
+    IF isEmpty(S) THEN
+       error "underflow"
+    ELSE
+        S.top=S.top-1;
+        return S.A[S.top+1];
+```
+
+```pseudo
+push(S,k)
+    IF S.top==MAX-1 THEN
+      error "overflow"
+    ELSE
+        S.top=S.top+1;
+        S.A[S.top]=k;
+```
+
+::: note
+Stacks mit variabler Größe
+
+Entweder in neues größeres Array umkopieren oder auf viele Arrays verteilen ($\rightarrow$ verkette Listen)
+:::
+
+::: warning
+Problem ist durchschnittlich $\Omega(n)$ Kopierschritte pro `push`.
+
+Reduzierung durch verdoppelung des Arrays, wenn an Grenze und schrumpfen, wenn weniger als Viertel belegt.
+:::
+
+#### variables Array
+
+```pseudo
+new(S)
+    S.A[]=ALLOCATE(1);
+    S.top=-1;
+    S.memsize=1;
+```
+
+```pseudo
+isEmpty(S)
+    IF S.top<0 THEN
+        return true
+    ELSE
+        return false;
+```
+
+```pseudo
+pop(S)
+    IF isEmpty(S) THEN
+        error "underflow"
+    ELSE
+        S.top=S.top-1;
+        IF 4*(S.top+1)==S.memsize THEN
+            S.memsize=S.memsize/2;
+            RESIZE(S.A,S.memsize);
+        return S.A[S.top+1];
+```
+
+```pseudo
+push(S,k)
+    S.top=S.top+1;
+    S.A[S.top]=k;
+    IF S.top+1==S.memsize THEN
+        S.memsize=2*S.memsize;
+        RESIZE(S.A,S.memsize);
+```
+
+::: note
+Im Durchschnitt für jeden der mindestens $n$ Befehle $\Theta(1)$ Umkopierschritte!
+:::
+
+## Verkettete Liste
+
+- head zeigt auf erstes Element, bzw. ist `nil` für leere Liste
+
+Jedes Element `x` besteht aus:
+
+- key (Wert)
+- prev (Zeiger auf Vorgänger, bzw. `nil`)
+- next (Zeiger auf Nachfolger, bzw. `nil`)
+
+### Als Array
+
+| ----- | -------- | -------- | ---------- | ------- | -------- | -------- | -------- | ---------- | -------- |
+| Werte | 12 (key) | 6 (prev) | nil (next) | - (key) | - (prev) | - (next) | 45 (key) | nil (prev) | 0 (next) |
+| Index | 0        | 1        | 2          | 3       | 4        | 5        | 6        | 7          | 8        |
+
+entspricht doppelt verketter Liste $45 \leftrightarrow 12$
+
+### Elementare Operationen
+
+```pseudo
+search(L,k) //returns pointer to k in L (or nil)
+    current=L.head;
+    WHILE current != nil AND current.key != k DO
+        current=current.next;
+    return current;
+```
+
+::: note
+Laufzeit für `search` $\Theta(n)$
+:::
+
+```pseudo
+insert(L,x) //inserts element x in L
+    x.next=L.head;
+    x.prev=nil;
+    IF L.head != nil THEN
+        L.head.prev=x;
+    L.head=x;
+```
+
+::: note
+Laufzeit für `insert` $\Theta(1)$
+
+Wenn auch überprüft wird ob Wert bereits in Liste, dann Laufzeit $\Omega(n)$!
+:::
+
+```pseudo
+delete(L,x) //deletes element x from L
+    IF x.prev != nil THEN
+        x.prev.next=x.next
+    ELSE
+        L.head=x.next;
+    IF x.next != nil THEN
+        x.next.prev=x.prev;
+```
+
+::: note
+Laufzeit für `delete` $\Theta(1)$
+:::
+
+### Sentinel
+
+Um Randfälle beim Löschen für Listenanfang/-ende zu eliminieren, wird Listenanfang durch Sentinel ersetzt.
+
+Eigenschaften:
+
+- von außen nicht sichtbar
+- Wert `nil`
+- Leere Liste besteht nur aus Sentinel
+- `head` zeigt auf `L.sent.next`
+
+Löschen mit Sentinel:
+
+```pseudo
+deleteSent(L,x) // deletes x from L with sentinel
+    x.prev.next=x.next;
+    x.next.prev=x.prev;
+```
+
+::: note
+Andere Operationen wie Einfügen müssen auch angepasst werden
+:::
+
