@@ -673,3 +673,70 @@ deleteSent(L,x) // deletes x from L with sentinel
 Andere Operationen wie Einfügen müssen auch angepasst werden
 :::
 
+## Queue
+
+### Befehle
+
+| Befehl          | Beschreibung                                                                                             |
+| --------------- | -------------------------------------------------------------------------------------------------------- |
+| `new(Q)`        | erzeugt neue (leere) Queue namens `Q`                                                                    |
+| `isEmpty(Q)`    | gibt an ob die Queue `Q` leer ist                                                                        |
+| `dequeue(Q)`    | gibt vorderstes Element der Queue `Q` zurück und löscht es aus der Queue (Fehlermeldung wenn Queue leer) |
+| `enqueue(Q, k)` | schreibt `k` als neues hinterstes Element in Queue `Q` (Fehlermeldung wenn Queue voll)                   |
+
+FIFO - first in, first out
+
+### Queues als zyklisches Array
+
+::: tip
+Wenn Array nicht zyklisch wäre, könnte Array Grenze erreicht werden oder Speicher wird verschwendet/ist nicht merh vorhanden
+:::
+
+::: note
+Um bei einem zyklischen Array korrekt überprüfen zu können ob es leer ist wird Variable `empty` eingeführt.
+Alertantiv ein Element als Platzhalter reservieren.
+
+`Q` leer, ween `front == rear` und `empty == true`
+
+`Q` voll, wenn `front == rear` und `empty == false`
+:::
+
+```pseudo
+new(Q)
+    Q.A[]=ALLOCATE(MAX);
+    Q.front=0;
+    Q.rear=0;
+    Q.empty=true;
+```
+
+```pseudo
+isEmpty(Q)
+    return Q.empty;
+```
+
+```pseudo
+dequeue(Q)
+    IF isEmpty(Q) THEN
+        error "underflow"
+    ELSE
+        Q.front=Q.front+1 mod MAX;
+        IF Q.front==Q.rear THEN
+            Q.empty=true;
+        return Q.A[Q.front-1 mod MAX];
+```
+
+```pseudo
+enqueue(Q,k)
+    IF Q.rear==Q.front AND !Q.empty THEN
+        error "overflow"
+    ELSE
+        Q.A[Q.rear]=k;
+        Q.rear=Q.rear+1 mod MAX;
+        Q.empty=false;
+```
+
+::: tip
+Zyklisches Array als Kreis vorstellen
+
+![Visualisierung eines zyklischen Arrays](zyklisches%20Array.png){width=70%}
+:::
