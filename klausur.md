@@ -1020,3 +1020,108 @@ delete(T,x) //assumes x in T
 
 Laufzeit: $\Theta(h)$ h = Höhe des Baumes
 
+## Binäre Suchbäume
+
+| Operation | Laufzeit    |
+| --------- | ----------- |
+| Einfügen  | $\Theta(1)$ |
+| Löschen   | $\Theta(h)$ |
+| Suchen    | $\Theta(n)$ |
+
+::: note
+Binärer Suchbaum:
+
+Binärbaum, so dass für alle Knoten z gilt:
+
+Wenn $x$ Knoten im linken Teilbaum von $z$, dann $x.key \leq z.key$
+
+Wenn $y$ Knoten im rechten Teilbaum von $z$, dann $y.key \geq z.key$
+:::
+
+### Preorder + eindeutige Werte $\Rightarrow$ Binärer Suchbaum
+
+- 1.Element Indentifiziert Wurzel
+- Rest Indentifiziert Werte im linken und rechten Teilbaum
+
+::: warning
+Inorder + eindeutige Werte ergibt keinen Binärer Suchbaum!
+:::
+
+### Einfügen
+
+```pseudo
+insert(T,z) //may insert z again
+    //z.left==z.right==nil;
+    x=T.root; px=nil;
+    WHILE x != nil DO
+        px=x;
+        IF x.key > z.key THEN
+            x=x.left
+        ELSE
+            x=x.right;
+    z.parent=px;
+    IF px==nil THEN
+        T.root=z
+    ELSE
+        IF px.key > z.key THEN
+            px.left=z
+        ELSE
+            px.right=z;
+```
+
+### Löschen
+
+```pseudo
+delete(T,z)
+    IF z.left==nil THEN
+        transplant(T,z,z.right)
+    ELSE
+        IF z.right==nil THEN
+            transplant(T,z,z.left)
+        ELSE
+            y=z.right;
+            WHILE y.left != nil DO
+                y=y.left;
+            IF y.parent != z THEN
+                transplant(T,y,y.right);
+                y.right=z.right;
+                y.right.parent=y;
+            transplant(T,z,y);
+            y.left=z.left;
+            y.left.parent=y;
+```
+
+```pseudo
+transplant(T,u,v)
+    IF u.parent==nil THEN
+        T.root=v
+    ELSE
+        IF u==u.parent.left THEN
+        u.parent.left=v
+        ELSE
+        u.parent.right=v;
+    IF v != nil THEN
+        v.parent=u.parent;
+```
+
+### Höhe Laufzeit
+
+Binärer Suchbaum
+
+| Operation | Laufzeit |
+| --------- | -------- |
+| Einfügen  | $O(h)$   |
+| Löschen   | $O(h)$   |
+| Suchen    | $O(h)$   |
+
+Verkettete Liste
+
+| Operation | Laufzeit    |
+| --------- | ----------- |
+| Einfügen  | $\Theta(1)$ |
+| Löschen   | $\Theta(1)$ |
+| Suchen    | $\Theta(n)$ |
+
+::: note
+besser, wenn viele Such-Operationen und $h$ klein relativ zu $n$
+:::
