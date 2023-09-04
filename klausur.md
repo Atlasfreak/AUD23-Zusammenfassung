@@ -745,7 +745,7 @@ enqueue(Q,k)
 ::: tip
 Zyklisches Array als Kreis vorstellen
 
-![Visualisierung eines zyklischen Arrays](zyklisches%20Array.png){width=70%}
+![Visualisierung eines zyklischen Arrays](zyklisches%20Array.png){width=50%}
 :::
 
 ### Queue als einfach verkettete Liste
@@ -840,14 +840,14 @@ Jeder Knoten enthält:
 - `child[]`: Array von Zeigern auf Kinder
 - `parent`: Zeiger auf den Elternknoten
 
-![Darstellung eines Baums als verkettete Liste](linkednlistTree.png){width=70%}
+![Darstellung eines Baums als verkettete Liste](linkednlistTree.png){width=50%}
 
 ::: note
 Baum Bedingung:
 
 Baum ist leer oder es gibt einen Knoten `r` ("Wurzel"), so dass jeder Knoten `v` von der WUrzel aus per eindeutiger Sequenz von `child`-Zeigern erreichbar ist:
 
-`v = r.chjild[i1].child[i2]. ... .child[im]`
+`v = r.child[i1].child[i2]. ... .child[im]`
 :::
 
 ### Eigenschaften
@@ -859,13 +859,13 @@ Baum ist leer oder es gibt einen Knoten `r` ("Wurzel"), so dass jeder Knoten `v`
 ::: tip
 Bäume werden üblicherweise als ungerichtete Graphen dargestellt
 
-![Baum als Graph](treeAsGraph.png){width=70%}
+![Baum als Graph](treeAsGraph.png){width=50%}
 :::
 
 ::: tip
 Begrifflichkeiten bei Bäumen:
 
-![Begrifflichkeiten von Bäumen](treeTerms.png){width=70%}
+![Begrifflichkeiten von Bäumen](treeTerms.png){width=50%}
 
 - Halbblätter haben genau ein Kinde
 - Höhe eines nicht-leeren Baumes = max {Höhe aller Teilbäume der Wurzel} + 1
@@ -1124,4 +1124,393 @@ Verkettete Liste
 
 ::: note
 besser, wenn viele Such-Operationen und $h$ klein relativ zu $n$
+:::
+
+## Rot Schwarz Bäume
+
+Ein Rot-Schwarz-Baum ist ein
+binärer Suchbaum, so dass gilt:
+
+1. Jeder Knoten hat die Farbe rot oder schwarz
+2. Die Wurzel ist schwarz (solang Baum nicht leer)
+3. Wenn ein Knoten rot ist, sind seine Kinder schwarz ("Nicht-Rot-Rot"-Regel)
+4. Für jeden Knoten hat jeder Pfad im Teilbaum zu einem Blatt oder Halbblatt die gleiche Anzahl von schwarzen Knoten ("gleiche Anzahl schwarz").
+Jeder mögliche Pfad hat die gleiche Schwarzhöhe.
+
+::: tip
+Rote Knoten haben genau 0 oder 2 Kinder
+:::
+
+### Schwarzhöhe
+
+Die Schwarzhöhe eines Knoten x ist die (eindeutige) Anzahl von schwarzen Knoten auf dem Weg
+zu einem Blatt oder Halbblatt im Teilbaum des Knoten
+
+::: note
+Ein Rot-Schwarz-Baum mit $n$ Knoten hat maximale Höhe $h \leq 2 \cdot \log_2(n+1)$.
+:::
+
+### Implementierung mit Sentinel
+
+`T.root.parent=T.sent`
+
+`T.sent.key=nil`
+
+`T.sent.color=black`
+
+`T.sent.parent=T.sent`
+
+`T.sent.left=T.sent`
+
+`T.sent.right=T.sent`
+
+Beispiel: `x.parent.parent.left` immer wohldefiniert
+
+![Rot Schwarz baum mit Sentinel](RSBaumSentinel.png){width=20%}
+
+### rotateLeft
+
+```pseudo
+rotateLeft(T,x) //x.right!=nil
+    y=x.right;
+    x.right=y.left;
+    IF y.left != nil THEN
+        y.left.parent=x;
+    y.parent=x.parent;
+    IF x.parent==T.sent THEN
+        T.root=y
+    ELSE
+        IF x==x.parent.left THEN
+            x.parent.left=y
+        ELSE
+            x.parent.right=y;
+    y.left=x;
+    x.parent=y;
+```
+
+### Einfügen
+
+```pseudo
+insert(T,z) //z.left==z.right==nil;
+    x=T.root; px=T.sent;
+    WHILE x != nil DO
+        px=x;
+        IF x.key > z.key THEN
+            x=x.left
+        ELSE
+            x=x.right;
+    z.parent=px;
+    IF px==T.sent THEN
+        T.root=z
+    ELSE
+        IF px.key > z.key THEN
+            px.left=z
+        ELSE
+            px.right=z;
+    z.color=red;
+    fixColorsAfterInsertion(T,z);
+```
+
+::: note
+Eingefügten Knoten erst auf rot setzen und dann RSB-Bedingung wieder herstellen
+:::
+
+```pseudo
+fixColorsAfterInsertion(T,z)
+    WHILE z.parent.color==red DO
+        IF z.parent==z.parent.parent.left THEN
+            y=z.parent.parent.right;
+        IF y!=nil AND y.color==red THEN
+            z.parent.color=black;
+            y.color=black;
+            z.parent.parent.color=red;
+            z=z.parent.parent;
+        ELSE
+            IF z==z.parent.right THEN
+                z=z.parent;
+                rotateLeft(T,z);
+            z.parent.color=black;
+            z.parent.parent.color=red;
+        rotateRight(T,z.parent.parent);
+        ELSE
+            … //exchange left and right
+    T.root.color=black;
+```
+
+### Laufzeit
+
+| Operation | Laufzeit          |
+| --------- | ----------------- |
+| Einfügen  | $\Theta(\log(n))$ |
+| Löschen   | $\Theta(\log(n))$ |
+| Suchen    | $\Theta(\log(n))$ |
+
+## AVL-Bäume
+
+Ein AVL-Baum ist ein binärer Suchbaum, so dass für die Balance $B(x)$ in jede Knoten x gilt: $B(x) \in \{-1,0,+1\}$.
+
+$B(x) = Höhe(rechter Teilbaum) - Höhe(linker Teilbaum)$
+
+::: note
+Ein AVL-Baum mit $n$ Knoten hat
+maximale Höhe $h \leq 1,441 \cdot \log_2(n)$.
+:::
+
+::: tip
+Jeder nicht leere AVL-Baum der Höhe $h$ lasst sich als Rot-Schwarz-Baum mit Schwarzhöhe $\lceil \frac{h+1}{2} \rceil$
+
+**Aber:** AVL $\neq$ RSB! (Für jede Höhe $h \geq 3$ gibt es einen Rot-Schwarz-Baum, der kein AVL-Baum ist.)
+:::
+
+### Einfügen
+
+```pseudo
+insert(T,z) //z.left==z.right==nil;
+    x=T.root; px=T.sent;
+    WHILE x != nil DO
+        px=x;
+        IF x.key > z.key THEN
+            x=x.left
+        ELSE
+            x=x.right;
+    z.parent=px;
+    IF px==T.sent THEN
+        T.root=z
+    ELSE
+        IF px.key > z.key THEN
+            px.left=z
+        ELSE
+            px.right=z;
+    fixBalanceAfterInsertion(T,z);
+```
+
+### Laufzeit
+
+| Operation | Laufzeit          |
+| --------- | ----------------- |
+| Einfügen  | $\Theta(\log(n))$ |
+| Löschen   | $\Theta(\log(n))$ |
+| Suchen    | $\Theta(\log(n))$ |
+
+::: note
+AVL-Bäume bessere (theoretische) Konstanten als Rot-Schwarz-Bäume,
+je nach Daten und Operationen aber in der Praxis nur unwesentlich schneller
+:::
+
+## Vergleich AVL vs RSB
+
+| AVL                                                                                                  | RSB                       |
+| ---------------------------------------------------------------------------------------------------- | ------------------------- |
+| Einfügen und Löschen verletzen in der Regel öfter die Baum-Bedingung, mehr Aufwand zum Rebalancieren | Suchen dauert evtl.länger |
+
+AVL-Bäume geeigneter, wenn mehr Such-Operationen
+und weniger Einfüge- und Lösch-Operationen
+
+## Splay-Bäume
+
+Ansatz: einmal angefragte Werte werden voraussichtlich noch öfter angefragt
+
+### Splay-Operation
+
+```pseudo
+splay(T,z)
+    WHILE z != T.root DO
+        IF z.parent.parent==nil THEN
+            zig(T,z);
+        ELSE
+            IF z==z.parent.parent.left.left OR z==z.parent.parent.right.right THEN
+                zigZig(T,z);
+            ELSE
+            zigZag(T,z);
+```
+
+```pseudo
+zigZig(T,z)
+    IF z==z.parent.left THEN
+        rotateRight(T,z.parent.parent);
+        rotateRight(T,z.parent);
+    ELSE
+        rotateLeft(T,z.parent.parent);
+        rotateLeft(T,z.parent);
+```
+
+`zig` und `zigZag` analog
+
+### Suchen
+
+```pseudo
+search(T,k)
+    x=T.root;
+    WHILE x != nil AND x.key != k DO
+        IF x.key < k THEN
+            x=x.right
+        ELSE
+            x=x.left;
+    IF x==nil THEN
+        return nil
+    ELSE
+        splay(T,x);
+        return T.root;
+```
+
+### Einfügen
+
+1. Suche analog zum Einfügen bei BST Einfügepunkt
+2. Spüle eingefügten Knoten `x` per Splay-Operation nach oben
+
+### Löschen
+
+1. Spüle gesuchten Knoten `x` per Splay-Operation nach oben
+2. Lösche `x`, wenn einer der beiden Teilbäume leer, dann fertig
+3. Spüle den "größten" Knoten `y` im linken Teilbaum per Splay-Operation nach oben
+4. Hänge rechten Teilbaum an `y` an
+
+### Laufzeit
+
+Für $m \geq n$ Operationen auf einem Splay-Baum mit maximal $n$ Knoten ist
+die Worst-Case-Laufzeit $O(m \cdot \log_2(n)$, also $O(\log_2(n)$ pro Operation.
+
+Operationen: Suchen, Einfügen, Löschen
+
+Zusätzlich: Oft gesuchte Elemente werden sehr schnell gefunden
+
+## Binäre Max-Heaps
+
+Ein binärer Max-Heap ist ein binärer Baum, der
+
+1. "bis auf das unterste Level vollständig und im untersten Level von links gefüllt ist" und
+2. Für alle Knoten `x` $\neq$ `T.root` gilt: `x.parent.key` $\geq$ `x.key`
+
+::: warning
+Heaps sind keine BSTs, linke Kinder können größere Werte als rechte Kinder haben!
+:::
+
+::: note
+Bei Min-Heaps sind die Werte in Elternknoten jeweils kleiner
+:::
+
+### Einfügen
+
+```pseudo
+insert(H,k) //als (unbeschränktes) Array
+    H.length=H.length+1;
+    H.A[H.length-1]=k;
+    i=H.length-1;
+    WHILE i>0 AND H.A[i] > H.A[i.parent]
+        SWAP(H.A,i,i.parent);
+        i=i.parent;
+```
+
+::: note
+Position durch Baumstruktur vorgegeben
+
+Vertausche nach oben, bis Max-Eigenschaft wieder erfüllt
+:::
+
+### Lösche
+
+1. Ersetze Maximum durch „letztes“ Blatt
+2. Stelle Max-Eigenschaften wieder her, indem Knoten nach unten gegen das Maximum der beiden Kinder getauscht wird (`heapify`)
+
+```pseudo
+extract-max(H) //als (unbeschränktes) Array
+    IF isEmpty(H) THEN
+        return error "underflow"
+    ELSE
+        max=H.A[0];
+        H.A[0]=H.A[H.length-1];
+        H.length=H.length-1;
+        heapify(H,0);
+        return max;
+```
+
+```pseudo
+heapify(H,i) //als (unbeschränktes) Array
+    maxind=i;
+    IF i.left<H.length AND H.A[i]<H.A[i.left] THEN
+        maxind=i.left;
+    IF i.right<H.length AND H.A[maxind]<H.A[i.right] THEN
+        maxind=i.right;
+    IF maxind != i THEN
+        SWAP(H.A,i,maxind);
+        heapify(H,maxind);
+```
+
+### Konstruktion
+
+```pseudo
+buildHeap(H) //Array A schon nach H.A kopiert
+    H.length=A.length;
+    FOR i = ceil((H.length-1)/2)-1 DOWNTO 0 DO
+        heapify(H,i);
+```
+
+### Heap-Sort
+
+```pseudo
+heapSort(H) //Array A schon nach H.A kopiert
+    buildHeap(H);
+    WHILE !isEmpty(H) DO
+        PRINT extract-max(H);
+```
+
+## B-Bäume
+
+Ein B-Baum (vom Grad $t$) ist ein Baum, bei dem
+
+1. Jeder Knoten (außer der Wurzel) zwischen $t-1$ und $2t-1$ Werte key[0], key[1], … hat und die Wurzel zwischen 1 und $2t-1$
+2. die Werte innerhalb eines Knoten aufsteigend geordnet sind
+3. die Blätter alle die gleiche Höhe haben
+4. jeder innerer Knoten mit $n$ Werten $n+1$ Kinder hat,
+so dass für alle Werte $k \cdot j$ aus dem $j$-ten Kind gilt: $k_0 \leq key[0] \leq k_1 \leq key[1] \leq \cdots \leq k_{n-1} \leq key[n-1] \leq k_n$
+
+### Suche
+
+```pseudo
+search(x,k)
+WHILE x != nil DO
+    i=0;
+    WHILE i < x.n AND x.key[i] < k DO
+        i=i+1;
+    IF i < x.n AND x.key[i]==k THEN
+        return (x,i);
+    ELSE
+        x=x.child[i];
+return nil;
+```
+
+### Einfügen
+
+```pseudo
+insert(T,z)
+Wenn Wurzel schon 2t-1 Werte, dann splitte Wurzel
+Suche rekursiv Einfügeposition:
+    Wenn zu besuchendes Kind 2t-1 Werte, splitte es erst
+Füge z in Blatt ein
+```
+
+### Löschen
+
+```pesudo
+delete(T,k)
+Wenn Wurzel nur 1 Wert und beide Kinder t-1 Werte, verschmelze Wurzel und Kinder (reduziert Höhe um 1)
+Suche rekursiv Löschposition:
+    Wenn zu besuchendes Kind nur t-1 Werte, verschmelze es oder rotiere/verschiebe
+Entferne Wert k in inneren Knoten/Blatt
+```
+
+### Laufzeiten Worst-Case
+
+| Operation | Laufzeit          |
+| --------- | ----------------- |
+| Einfügen  | $\Theta(\log_t(n))$ |
+| Löschen   | $\Theta(\log_t(n))$ |
+| Suchen    | $\Theta(\log_t(n))$ |
+
+::: warning
+**Achtung:**
+$O$-Notation versteckt (konstanten) Faktor $t$ für Suche innerhalb eines Knoten;
+
+$t \cdot \log_t(n) = t \cdot \frac{\log_2(n)}{\log_2(t)}$ ist in der Regel größer als $\log_2(n)$,
+also in der Regel nur vorteilhaft, wenn Daten blockweise eingelesen werden.
 :::
