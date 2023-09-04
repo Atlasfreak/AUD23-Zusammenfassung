@@ -792,6 +792,20 @@ enqueue(Q,x)
     Q.rear=x;
 ```
 
+::: tip
+Vor- und Nachteile von Queue alös verkettete Liste
+
+Vorteile:
+
+- verkettete Liste kann unendlich lang sein
+- simplere implementation, man muss nicht im Blick haben, dass der pointer des zyklischen Arrays wieder an den anfagnen springen muss etc.
+- kann leicht vergrößert und verkleinert werden
+
+Nachteile:
+
+- größerer Speicherbedarf
+:::
+
 ## Anzahl der Operation im Worst-Case
 
 Stack
